@@ -72,8 +72,9 @@
         android:layout_width="200dp"
         android:layout_height="20dp"
         android:layout_marginStart="32dp"
-        app:layout_constraintStart_toEndOf="@+id/tvTipPercent"
+        android:max="30"
         app:layout_constraintBottom_toBottomOf="@+id/tvTipPercent"
+        app:layout_constraintStart_toEndOf="@+id/tvTipPercent"
         app:layout_constraintTop_toTopOf="@+id/tvTipPercent" />
 
     <TextView
