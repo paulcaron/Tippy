@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
 private const val INITIAL_TIP_PERCENT = 15
+private const val INITIAL_NUM_PEOPLE = 1
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,12 +20,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         seekBarTip.progress = INITIAL_TIP_PERCENT
         tvTipPercent.text = "$INITIAL_TIP_PERCENT%"
+        tvNumPeople.text = "$INITIAL_NUM_PEOPLE person"
         updateTipDescription(INITIAL_TIP_PERCENT)
         seekBarTip.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.i(TAG, "onProgressChanged $progress")
+                Log.i(TAG, "onProgressChangedTip $progress")
                 tvTipPercent.text = "$progress%"
                 updateTipDescription(progress)
+                computeTipAndTotal()
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        seekBarNumPeople.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                Log.i(TAG, "onProgressChangedNumPeople $progress")
+                val numPersons = progress+1
+                if (progress==0){
+                    tvNumPeople.text = "$numPersons person"
+                }
+                else{
+                    tvNumPeople.text = "$numPersons persons"
+                }
                 computeTipAndTotal()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -65,14 +82,17 @@ class MainActivity : AppCompatActivity() {
         if (etBase.text.isEmpty()){
             tvTipAmount.text = ""
             tvTotalAmount.text = ""
+            tvTotalAmountPerPerson.text = ""
         }
         else {
             val baseAmout = etBase.text.toString().toDouble()
             val tipPercent = seekBarTip.progress
             val tipAmount = baseAmout * tipPercent / 100
             val totalAmount = baseAmout + tipAmount
+            val totalAmountPerPerson = totalAmount / (seekBarNumPeople.progress+1)
             tvTipAmount.text = "%.2f".format(tipAmount)
             tvTotalAmount.text = "%.2f".format(totalAmount)
+            tvTotalAmountPerPerson.text = "%.2f".format(totalAmountPerPerson)
         }
     }
 }
