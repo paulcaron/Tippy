@@ -14,6 +14,8 @@ private const val TAG = "MainActivity"
 private const val INITIAL_TIP_PERCENT = 15
 private const val INITIAL_NUM_PEOPLE = 1
 
+var currency = ""
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +59,30 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+
+        buttonEuro.setOnClickListener {
+            currency = "€"
+            buttonEuro.background.setTint(ContextCompat.getColor(this, R.color.colorPrimary))
+            buttonDollar.background.setTint(ContextCompat.getColor(this, R.color.colorDefaultButton))
+            buttonPound.background.setTint(ContextCompat.getColor(this, R.color.colorDefaultButton))
+            computeTipAndTotal()
+        }
+
+        buttonDollar.setOnClickListener {
+            currency = "$"
+            buttonEuro.background.setTint(ContextCompat.getColor(this, R.color.colorDefaultButton))
+            buttonDollar.background.setTint(ContextCompat.getColor(this, R.color.colorPrimary))
+            buttonPound.background.setTint(ContextCompat.getColor(this, R.color.colorDefaultButton))
+            computeTipAndTotal()
+        }
+
+        buttonPound.setOnClickListener {
+            currency = "£"
+            buttonEuro.background.setTint(ContextCompat.getColor(this, R.color.colorDefaultButton))
+            buttonDollar.background.setTint(ContextCompat.getColor(this, R.color.colorDefaultButton))
+            buttonPound.background.setTint(ContextCompat.getColor(this, R.color.colorPrimary))
+            computeTipAndTotal()
+        }
     }
 
     private fun updateTipDescription(tipPercent: Int) {
@@ -90,9 +116,9 @@ class MainActivity : AppCompatActivity() {
             val tipAmount = baseAmout * tipPercent / 100
             val totalAmount = baseAmout + tipAmount
             val totalAmountPerPerson = totalAmount / (seekBarNumPeople.progress+1)
-            tvTipAmount.text = "%.2f".format(tipAmount)
-            tvTotalAmount.text = "%.2f".format(totalAmount)
-            tvTotalAmountPerPerson.text = "%.2f".format(totalAmountPerPerson)
+            tvTipAmount.text = "%.2f".format(tipAmount) + " " + currency
+            tvTotalAmount.text = "%.2f".format(totalAmount) + " " + currency
+            tvTotalAmountPerPerson.text = "%.2f".format(totalAmountPerPerson) + " " + currency
         }
     }
 }
